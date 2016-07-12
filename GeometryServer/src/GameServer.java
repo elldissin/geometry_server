@@ -16,7 +16,8 @@ public class GameServer {
 		GameServer myServer = new GameServer();
 		try {
 			myServer.serverSocket = new ServerSocket(myServer.portNumber);
-			while (true) {
+			
+			while (true) { //fix this to stop somehow
 				System.out.println("Waiting for new connection...");
 				myServer.clientSocket = myServer.serverSocket.accept();
 				myServer.socketList.add(myServer.clientSocket);

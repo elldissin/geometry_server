@@ -30,10 +30,10 @@ public class GameServerThread implements Runnable {
 			Thread outputThread = new Thread (new Runnable(){
 				@Override
 				public void run() {
-					String msg="";
-					while(!msg.equals("stop"))
+					String msg=""; //TOBECLEANED
+					while(!msg.equals("stop")) //TOBECLEANED
 						if(server.hasNewEvents()) {
-//							msg=server.getKeyEvent()().getMessage();
+//							msg=server.getKeyEvent()().getMessage(); //TOBECLEANED
 							try {
 								out.writeObject(server.getKeyEvent());
 							} catch (IOException e) {
