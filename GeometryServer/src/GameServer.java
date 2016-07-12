@@ -7,10 +7,10 @@ public class GameServer {
 	ServerSocket serverSocket=null;
 	Socket clientSocket=null;
 	ArrayList<Socket> socketList = new ArrayList<Socket>();
-	ArrayList<ServerThread> threadList = new ArrayList<ServerThread>();
+	ArrayList<GameServerThread> threadList = new ArrayList<GameServerThread>();
 
 	public static void main(String[] args) {
-		Server myServer = new Server();
+		GameServer myServer = new GameServer();
 		try {
 			myServer.serverSocket = new ServerSocket(myServer.portNumber);
 			while (true) {
@@ -18,7 +18,7 @@ public class GameServer {
 				myServer.clientSocket = myServer.serverSocket.accept();
 				myServer.socketList.add(myServer.clientSocket);
 				System.out.println("New connection accepted from " + myServer.clientSocket.getInetAddress());
-				ServerThread st=new ServerThread(myServer.clientSocket, myServer);
+				GameServerThread st=new GameServerThread(myServer.clientSocket, myServer);
 				new Thread(st).start();
 				myServer.threadList.add(st);
 				//				System.out.println("New thread for connection was started");
