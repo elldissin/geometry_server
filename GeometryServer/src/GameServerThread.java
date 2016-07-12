@@ -1,3 +1,4 @@
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -31,22 +32,22 @@ public class GameServerThread implements Runnable {
 				public void run() {
 					String msg="";
 					while(!msg.equals("stop"))
-						if(server.hasNewMessage()) {
-							msg=server.getGlobalMessage().getMessage();
+						if(server.hasNewEvents()) {
+//							msg=server.getKeyEvent()().getMessage();
 							try {
-								out.writeObject(server.getGlobalMessage());
+								out.writeObject(server.getKeyEvent());
 							} catch (IOException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
 						}
 				}});
-
 			outputThread.start();
 			
 			//The below is continously scanning for new input from clients
-			while ((inputMessage = (Message)in.readObject()) != null) {
-				server.setGlobalMessage(inputMessage);
+			KeyEvent inputEvent = null;
+			while ((inputEvent = (KeyEvent)in.readObject()) != null) {
+				server.setKeyEvent(inputEvent);
 			}
 
 		} catch (IOException | ClassNotFoundException e) {

@@ -1,5 +1,6 @@
 import java.net.*;
 import java.util.ArrayList;
+import java.awt.event.KeyEvent;
 import java.io.*;
 
 public class GameServer {
@@ -8,7 +9,9 @@ public class GameServer {
 	Socket clientSocket=null;
 	ArrayList<Socket> socketList = new ArrayList<Socket>();
 	ArrayList<GameServerThread> threadList = new ArrayList<GameServerThread>();
-
+	KeyEvent keyEvent;
+	boolean hasNewEvents=false;
+	
 	public static void main(String[] args) {
 		GameServer myServer = new GameServer();
 		try {
@@ -41,22 +44,22 @@ public class GameServer {
 		}
 	}
 
-//	public synchronized void setGlobalMessage(Message message) {
-//		globalMessage=message;
-//		messageUpdated=true;
+	public synchronized void setKeyEvent(KeyEvent event) {
+		keyEvent=event;
+		hasNewEvents=true;
 //		clientMessageRequestCount=threadList.size()*2;
-//		System.out.println("setting global message, clients to notify: "+clientMessageRequestCount);
-//	}
+		System.out.println("New event was received from client");
+	}
 //
-//	public synchronized Message getGlobalMessage() {
+	public synchronized KeyEvent getKeyEvent() {
 //		clientMessageRequestCount--;
 //		System.out.println("getting global message, clients to notify: "+clientMessageRequestCount);
 //		if(clientMessageRequestCount<=0)
-//			messageUpdated=false;
-//		return globalMessage;
-//	}
+			hasNewEvents=false;
+		return keyEvent;
+	}
 //
-//	public synchronized boolean hasNewMessage() {
-//		return messageUpdated;
-//	}
+	public synchronized boolean hasNewEvents() {
+		return hasNewEvents;
+	}
 }
