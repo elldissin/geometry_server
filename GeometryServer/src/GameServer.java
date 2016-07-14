@@ -1,5 +1,8 @@
 import java.net.*;
 import java.util.ArrayList;
+
+import nubiki.networking.NetworkMessage;
+
 import java.awt.event.KeyEvent;
 import java.io.*;
 
@@ -9,7 +12,7 @@ public class GameServer {
 	Socket clientSocket=null;
 	ArrayList<Socket> socketList = new ArrayList<Socket>();
 	ArrayList<GameServerThread> threadList = new ArrayList<GameServerThread>();
-	KeyEvent keyEvent;
+	NetworkMessage keyEvent;
 	boolean hasNewEvents=false;
 	
 	public static void main(String[] args) {
@@ -45,14 +48,14 @@ public class GameServer {
 		}
 	}
 
-	public synchronized void setKeyEvent(KeyEvent event) {
+	public synchronized void setMessage(NetworkMessage event) {
 		keyEvent=event;
 		hasNewEvents=true;
 //		clientMessageRequestCount=threadList.size()*2;
 		System.out.println("New event was received from client");
 	}
 //
-	public synchronized KeyEvent getKeyEvent() {
+	public synchronized NetworkMessage getMessage() {
 //		clientMessageRequestCount--;
 //		System.out.println("getting global message, clients to notify: "+clientMessageRequestCount);
 //		if(clientMessageRequestCount<=0)

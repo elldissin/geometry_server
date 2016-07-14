@@ -1,8 +1,9 @@
-import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+
+import nubiki.networking.NetworkMessage;
 
 public class GameServerThread implements Runnable {
 	Socket socket;
@@ -35,8 +36,8 @@ public class GameServerThread implements Runnable {
 						if(server.hasNewEvents()) {
 //							msg=server.getKeyEvent()().getMessage(); //TOBECLEANED
 							try {
-								out.writeObject(server.getKeyEvent());
-								System.out.println("Event sent (Server)");
+								out.writeObject(server.getMessage());
+//								System.out.println("Event sent (Server)");
 							} catch (IOException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
@@ -46,10 +47,10 @@ public class GameServerThread implements Runnable {
 			outputThread.start();
 			
 			//The below is continously scanning for new input from clients
-			KeyEvent inputEvent = null;
-			while ((inputEvent = (KeyEvent)in.readObject()) != null) {
-				System.out.println("Event received (Server)");
-				server.setKeyEvent(inputEvent);
+			NetworkMessage inputEvent = null;
+			while ((inputEvent = (NetworkMessage)in.readObject()) != null) {
+//				System.out.println("Event received (Server)");
+				server.setMessage(inputEvent);
 			}
 
 		} catch (IOException | ClassNotFoundException e) {
