@@ -36,6 +36,7 @@ public class GameServerThread implements Runnable {
 //							msg=server.getKeyEvent()().getMessage(); //TOBECLEANED
 							try {
 								out.writeObject(server.getKeyEvent());
+								System.out.println("Event sent (Server)");
 							} catch (IOException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
@@ -47,6 +48,7 @@ public class GameServerThread implements Runnable {
 			//The below is continously scanning for new input from clients
 			KeyEvent inputEvent = null;
 			while ((inputEvent = (KeyEvent)in.readObject()) != null) {
+				System.out.println("Event received (Server)");
 				server.setKeyEvent(inputEvent);
 			}
 
