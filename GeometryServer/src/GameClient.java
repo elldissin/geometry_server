@@ -46,27 +46,27 @@ public class GameClient implements AutoCloseable, Runnable {
 
 	@Override
 	public void run() {
-		//The below created thread is continously scanning for server if it has new messages
-		Thread outputThread = new Thread (new Runnable(){
-			@Override
-			public void run() {
-				String msg=""; //TOBECLEANED
-				while(!msg.equals("stop")) //TOBECLEANED
-					if(server.hasNewEvents()) {
-						try {
-							out.writeObject(server.getMessage());
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-						System.out.println("Event sent (Server)");
-					}
-			}});
-		outputThread.start();
+//		//The below created thread is continously scanning for server if it has new messages
+//		Thread outputThread = new Thread (new Runnable(){
+//			@Override
+//			public void run() {
+//				String msg=""; //TOBECLEANED
+//				while(!msg.equals("stop")) //TOBECLEANED
+//					if(server.hasNewEvents()) {
+//						try {
+//							out.writeObject(server.getMessage());
+//						} catch (IOException e) {
+//							e.printStackTrace();
+//						}
+//						System.out.println("Event sent (Server)");
+//					}
+//			}});
+//		outputThread.start();
 		//The below is continously scanning for new input from clients
 		NetworkMessage inputEvent = null;
 		try {
 			while ((inputEvent = (NetworkMessage)in.readObject()) != null) {
-				System.out.println("Event received (Server)");
+//				System.out.println("Event received (Server)");
 				server.setMessage(inputEvent);
 			}
 		} catch (ClassNotFoundException e) {

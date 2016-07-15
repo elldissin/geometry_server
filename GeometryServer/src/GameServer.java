@@ -50,9 +50,8 @@ public class GameServer {
 
 	public synchronized void setMessage(NetworkMessage event) {
 		keyEvent=event;
-		hasNewEvents=true;
-//		clientMessageRequestCount=threadList.size()*2;
-		System.out.println("New event was received from client");
+//		hasNewEvents=true;
+		notifyAllClients();
 	}
 //
 	public synchronized NetworkMessage getMessage() {
@@ -65,5 +64,16 @@ public class GameServer {
 //
 	public synchronized boolean hasNewEvents() {
 		return hasNewEvents;
+	}
+	
+	private void notifyAllClients() {
+		for(int i=0;i<clientList.size();i++)
+			try {
+				clientList.get(i).getOutputStream().writeObject(keyEvent);
+				System.out.println("Event sent to client: "+clientList.get(i).getClientID());
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 	}
 }
