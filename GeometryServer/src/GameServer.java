@@ -11,7 +11,7 @@ public class GameServer {
 	ServerSocket serverSocket=null;
 	Socket clientSocket=null;
 	ArrayList<Socket> socketList = new ArrayList<Socket>();
-	ArrayList<GameServerThread> threadList = new ArrayList<GameServerThread>();
+	ArrayList<GameClient> clientList = new ArrayList<GameClient>();
 	NetworkMessage keyEvent;
 	boolean hasNewEvents=false;
 	
@@ -25,9 +25,9 @@ public class GameServer {
 				myServer.clientSocket = myServer.serverSocket.accept();
 				myServer.socketList.add(myServer.clientSocket);
 				System.out.println("New connection accepted from " + myServer.clientSocket.getInetAddress());
-				GameServerThread st=new GameServerThread(myServer.clientSocket, myServer);
+				GameClient st=new GameClient(myServer.clientSocket, myServer);
 				new Thread(st).start();
-				myServer.threadList.add(st);
+				myServer.clientList.add(st);
 				//				System.out.println("New thread for connection was started");
 			}
 		} catch (IOException e) {
