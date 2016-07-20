@@ -70,7 +70,7 @@ public class GameServer {
 		for(int i=0;i<clientList.size();i++)
 			try {
 				clientList.get(i).getOutputStream().writeObject(keyEvent);
-				System.out.println("Event sent to client: "+clientList.get(i).getClientID());
+//				System.out.println("Event sent to client: "+clientList.get(i).getClientID());
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
