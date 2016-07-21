@@ -11,7 +11,12 @@ public class GameClient implements AutoCloseable, Runnable {
 	private int clientID;
 	private Socket socket;
 	private GameServer server;
+	private boolean running=false;
 
+	public boolean isRunning() {
+		return running;
+	}
+	
 	public GameClient(Socket socket, GameServer server) throws IOException {
 		clientID=UniqueIdProvider.getID();
 		this.socket=socket;
@@ -46,22 +51,7 @@ public class GameClient implements AutoCloseable, Runnable {
 
 	@Override
 	public void run() {
-//		//The below created thread is continously scanning for server if it has new messages
-//		Thread outputThread = new Thread (new Runnable(){
-//			@Override
-//			public void run() {
-//				String msg=""; //TOBECLEANED
-//				while(!msg.equals("stop")) //TOBECLEANED
-//					if(server.hasNewEvents()) {
-//						try {
-//							out.writeObject(server.getMessage());
-//						} catch (IOException e) {
-//							e.printStackTrace();
-//						}
-//						System.out.println("Event sent (Server)");
-//					}
-//			}});
-//		outputThread.start();
+		running = true;
 		//The below is continously scanning for new input from clients
 		NetworkMessage inputEvent = null;
 		try {
@@ -73,8 +63,9 @@ public class GameClient implements AutoCloseable, Runnable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+//			System.out.println("Following client id stopped: " + clientID);
+			running=false;
+			server.closeObsoleteClients();
 		}
 	}
 }
