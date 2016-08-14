@@ -1,7 +1,7 @@
 import java.net.*;
 import java.util.ArrayList;
 
-import nubiki.networking.NetworkMessage;
+import geometry.networking.NetworkMessage;
 
 import java.awt.event.KeyEvent;
 import java.io.*;

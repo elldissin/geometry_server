@@ -3,7 +3,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-import nubiki.networking.NetworkMessage;
+import geometry.networking.NetworkMessage;
 
 public class GameClient implements AutoCloseable, Runnable {
 	private ObjectOutputStream out;
