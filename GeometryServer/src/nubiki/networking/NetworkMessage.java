@@ -2,7 +2,7 @@ package nubiki.networking;
 
 import java.io.Serializable;
 
-import nubiki.events.GameEvent;
+import geometry.networking.events.GameEvent;;
 
 public class NetworkMessage implements Serializable {
 
