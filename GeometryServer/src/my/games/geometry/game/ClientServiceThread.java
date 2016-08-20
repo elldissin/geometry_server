@@ -1,32 +1,37 @@
+package my.games.geometry.game;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 import geometry.networking.NetworkMessage;
+import my.games.geometry.UniqueIdProvider;
 
-public class GameClient implements AutoCloseable, Runnable {
+public class ClientServiceThread implements AutoCloseable, Runnable {
 	private ObjectOutputStream out;
 	private ObjectInputStream in;
 	private int clientID;
 	private Socket socket;
-	private GameServer server;
-	private boolean running=false;
+	private Server server;
+	private boolean running = false;
 
 	public boolean isRunning() {
 		return running;
 	}
-	
-	public GameClient(Socket socket, GameServer server) throws IOException {
-		clientID=UniqueIdProvider.getID();
-		this.socket=socket;
-		this.server=server;
+
+	public ClientServiceThread(Socket socket, Server server) throws IOException {
+		clientID = UniqueIdProvider.getID();
+		this.socket = socket;
+		this.server = server;
 		out = new ObjectOutputStream(socket.getOutputStream());
 		in = new ObjectInputStream(socket.getInputStream());
 	}
+
 	public int getClientID() {
 		return clientID;
 	}
+
 	public void setClientID(int clientID) {
 		this.clientID = clientID;
 	}
@@ -41,30 +46,30 @@ public class GameClient implements AutoCloseable, Runnable {
 
 	@Override
 	public void close() throws IOException {
-		if(out!=null)
+		if (out != null)
 			out.close();
-		if(in!=null)
+		if (in != null)
 			in.close();
-		if(socket!=null)
+		if (socket != null)
 			socket.close();
 	}
 
 	@Override
 	public void run() {
 		running = true;
-		//The below is continously scanning for new input from clients
+		// The below is continously scanning for new input from clients
 		NetworkMessage inputEvent = null;
 		try {
-			while ((inputEvent = (NetworkMessage)in.readObject()) != null) {
-//				System.out.println("Event received (Server)");
+			while ((inputEvent = (NetworkMessage) in.readObject()) != null) {
+				// System.out.println("Event received (Server)");
 				server.setMessage(inputEvent);
 			}
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-//			System.out.println("Following client id stopped: " + clientID);
-			running=false;
+			// System.out.println("Following client id stopped: " + clientID);
+			running = false;
 			server.closeObsoleteClients();
 		}
 	}

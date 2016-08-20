@@ -1,4 +1,4 @@
-
+package my.games.geometry;
 public class UniqueIdProvider {
 
 	static int id;

@@ -1,22 +1,25 @@
-import java.net.*;
+package my.games.geometry.game;
+
+import java.io.IOException;
+import java.net.ServerSocket;
+
+
+import java.net.Socket;
 import java.util.ArrayList;
 
 import geometry.networking.NetworkMessage;
 
-import java.awt.event.KeyEvent;
-import java.io.*;
-
-public class GameServer {
+public class Server {
 	int portNumber = 4444;
 	ServerSocket serverSocket = null;
 	Socket clientSocket = null;
 	ArrayList<Socket> socketList = new ArrayList<Socket>();
-	ArrayList<GameClient> clientList = new ArrayList<GameClient>();
+	ArrayList<ClientServiceThread> clientList = new ArrayList<ClientServiceThread>();
 	NetworkMessage keyEvent;
 	boolean hasNewEvents = false;
 
 	public static void main(String[] args) {
-		GameServer myServer = new GameServer();
+		Server myServer = new Server();
 		try {
 			myServer.serverSocket = new ServerSocket(myServer.portNumber);
 
@@ -25,7 +28,7 @@ public class GameServer {
 				myServer.clientSocket = myServer.serverSocket.accept();
 				myServer.socketList.add(myServer.clientSocket);
 				System.out.println("New connection accepted from " + myServer.clientSocket.getInetAddress());
-				GameClient st = new GameClient(myServer.clientSocket, myServer);
+				ClientServiceThread st = new ClientServiceThread(myServer.clientSocket, myServer);
 				new Thread(st).start();
 				myServer.clientList.add(st);
 				// System.out.println("New thread for connection was started");
