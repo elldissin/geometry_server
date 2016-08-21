@@ -6,6 +6,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 import geometry.networking.NetworkMessage;
+import geometry.networking.PlayerInput;
 import my.games.geometry.UniqueIdProvider;
 
 public class ClientServiceThread implements AutoCloseable, Runnable {
@@ -58,11 +59,11 @@ public class ClientServiceThread implements AutoCloseable, Runnable {
 	public void run() {
 		running = true;
 		// The below is continously scanning for new input from clients
-		NetworkMessage inputEvent = null;
+		PlayerInput inputFromPlayer = null;
 		try {
-			while ((inputEvent = (NetworkMessage) in.readObject()) != null) {
+			while ((inputFromPlayer = (PlayerInput) in.readObject()) != null) {
 				// System.out.println("Event received (Server)");
-				server.setMessage(inputEvent);
+				server.setMessage(inputFromPlayer);
 			}
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block

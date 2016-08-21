@@ -1,13 +1,18 @@
 package my.games.geometry.game;
 
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.net.ServerSocket;
-
-
 import java.net.Socket;
 import java.util.ArrayList;
 
 import geometry.networking.NetworkMessage;
+import geometry.networking.PlayerInput;
+import geometry.networking.events.GameEvent;
+import geometry.networking.events.MoveEvent;
+import geometry.networking.events.ShootEvent;
+import geometry.networking.events.TurnEventCCW;
+import geometry.networking.events.TurnEventCW;
 
 public class Server {
 	int portNumber = 4444;
@@ -15,7 +20,7 @@ public class Server {
 	Socket clientSocket = null;
 	ArrayList<Socket> socketList = new ArrayList<Socket>();
 	ArrayList<ClientServiceThread> clientList = new ArrayList<ClientServiceThread>();
-	NetworkMessage keyEvent;
+	NetworkMessage serverResponce;
 	boolean hasNewEvents = false;
 
 	public static void main(String[] args) {
@@ -48,23 +53,17 @@ public class Server {
 		}
 	}
 
-	public synchronized void setMessage(NetworkMessage event) {
-		keyEvent = event;
+	public synchronized void setMessage(PlayerInput inputFromPlayer) {
+		serverResponce = responceFromInput(inputFromPlayer);
 		// hasNewEvents=true;
 		notifyAllClients();
 	}
 
-	//
 	public synchronized NetworkMessage getMessage() {
-		// clientMessageRequestCount--;
-		// System.out.println("getting global message, clients to notify:
-		// "+clientMessageRequestCount);
-		// if(clientMessageRequestCount<=0)
 		hasNewEvents = false;
-		return keyEvent;
+		return serverResponce;
 	}
 
-	//
 	public synchronized boolean hasNewEvents() {
 		return hasNewEvents;
 	}
@@ -72,11 +71,10 @@ public class Server {
 	private void notifyAllClients() {
 		for (int i = 0; i < clientList.size(); i++)
 			try {
-				clientList.get(i).getOutputStream().writeObject(keyEvent);
+				clientList.get(i).getOutputStream().writeObject(serverResponce);
 				// System.out.println("Event sent to client:
 				// "+clientList.get(i).getClientID());
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 	}
@@ -88,5 +86,46 @@ public class Server {
 				clientList.remove(i);
 			}
 		}
+	}
+
+	private NetworkMessage responceFromInput(PlayerInput input) {
+		GameEvent ev;
+		NetworkMessage msg = new NetworkMessage();
+
+		switch (input.getKeyCode()) {
+		case KeyEvent.VK_W:
+			ev = new MoveEvent(0);
+			msg.setEvent(ev);
+			break;
+		case KeyEvent.VK_D:
+			ev = new TurnEventCW(0);
+			msg.setEvent(ev);
+			break;
+		case KeyEvent.VK_A:
+			ev = new TurnEventCCW(0);
+			msg.setEvent(ev);
+			break;
+		case KeyEvent.VK_Q:
+			ev = new ShootEvent(0);
+			msg.setEvent(ev);
+			break;
+		case KeyEvent.VK_UP:
+			ev = new MoveEvent(1);
+			msg.setEvent(ev);
+			break;
+		case KeyEvent.VK_RIGHT:
+			ev = new TurnEventCW(1);
+			msg.setEvent(ev);
+			break;
+		case KeyEvent.VK_LEFT:
+			ev = new TurnEventCCW(1);
+			msg.setEvent(ev);
+			break;
+		case KeyEvent.VK_CONTROL:
+			ev = new ShootEvent(1);
+			msg.setEvent(ev);
+			break;
+		}
+		return msg;
 	}
 }
