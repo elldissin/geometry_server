@@ -94,35 +94,35 @@ public class Server {
 
 		switch (input.getKeyCode()) {
 		case KeyEvent.VK_W:
-			ev = new MoveEvent(0);
-			msg.setEvent(ev);
-			break;
-		case KeyEvent.VK_D:
-			ev = new TurnEventCW(0);
-			msg.setEvent(ev);
-			break;
-		case KeyEvent.VK_A:
-			ev = new TurnEventCCW(0);
-			msg.setEvent(ev);
-			break;
-		case KeyEvent.VK_Q:
-			ev = new ShootEvent(0);
-			msg.setEvent(ev);
-			break;
-		case KeyEvent.VK_UP:
 			ev = new MoveEvent(1);
 			msg.setEvent(ev);
 			break;
-		case KeyEvent.VK_RIGHT:
+		case KeyEvent.VK_D:
 			ev = new TurnEventCW(1);
 			msg.setEvent(ev);
 			break;
-		case KeyEvent.VK_LEFT:
+		case KeyEvent.VK_A:
 			ev = new TurnEventCCW(1);
 			msg.setEvent(ev);
 			break;
-		case KeyEvent.VK_CONTROL:
+		case KeyEvent.VK_Q:
 			ev = new ShootEvent(1);
+			msg.setEvent(ev);
+			break;
+		case KeyEvent.VK_UP:
+			ev = new MoveEvent(2);
+			msg.setEvent(ev);
+			break;
+		case KeyEvent.VK_RIGHT:
+			ev = new TurnEventCW(2);
+			msg.setEvent(ev);
+			break;
+		case KeyEvent.VK_LEFT:
+			ev = new TurnEventCCW(2);
+			msg.setEvent(ev);
+			break;
+		case KeyEvent.VK_CONTROL:
+			ev = new ShootEvent(2);
 			msg.setEvent(ev);
 			break;
 		}
