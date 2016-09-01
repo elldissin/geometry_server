@@ -14,7 +14,7 @@ import geometry.networking.events.ShootEvent;
 import geometry.networking.events.TurnEventCCW;
 import geometry.networking.events.TurnEventCW;
 
-public class Server {
+public class Application {
 	int portNumber = 4444;
 	ServerSocket serverSocket = null;
 	Socket clientSocket = null;
@@ -24,7 +24,7 @@ public class Server {
 	boolean hasNewEvents = false;
 
 	public static void main(String[] args) {
-		Server myServer = new Server();
+		Application myServer = new Application();
 		try {
 			myServer.serverSocket = new ServerSocket(myServer.portNumber);
 

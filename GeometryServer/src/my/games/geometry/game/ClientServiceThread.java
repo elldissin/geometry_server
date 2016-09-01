@@ -14,14 +14,14 @@ public class ClientServiceThread implements AutoCloseable, Runnable {
 	private ObjectInputStream in;
 	private int clientID;
 	private Socket socket;
-	private Server server;
+	private Application server;
 	private boolean running = false;
 
 	public boolean isRunning() {
 		return running;
 	}
 
-	public ClientServiceThread(Socket socket, Server server) throws IOException {
+	public ClientServiceThread(Socket socket, Application server) throws IOException {
 		clientID = UniqueIdProvider.getID();
 		this.socket = socket;
 		this.server = server;
