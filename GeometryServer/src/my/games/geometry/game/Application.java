@@ -6,13 +6,13 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
-import geometry.networking.NetworkMessage;
-import geometry.networking.PlayerInput;
-import geometry.networking.events.GameEvent;
-import geometry.networking.events.MoveEvent;
-import geometry.networking.events.ShootEvent;
-import geometry.networking.events.TurnEventCCW;
-import geometry.networking.events.TurnEventCW;
+import my.games.geometry.events.GameEvent;
+import my.games.geometry.events.MoveEvent;
+import my.games.geometry.events.ShootEvent;
+import my.games.geometry.events.TurnEventCCW;
+import my.games.geometry.events.TurnEventCW;
+import my.games.geometry.networking.NetworkMessage;
+import my.games.geometry.networking.PlayerInput;
 
 public class Application {
 	int portNumber = 4444;

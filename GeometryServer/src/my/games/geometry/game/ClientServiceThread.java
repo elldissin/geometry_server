@@ -5,9 +5,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-import geometry.networking.NetworkMessage;
-import geometry.networking.PlayerInput;
 import my.games.geometry.UniqueIdProvider;
+import my.games.geometry.networking.PlayerInput;
 
 public class ClientServiceThread implements AutoCloseable, Runnable {
 	private ObjectOutputStream out;
