@@ -1,8 +1,6 @@
 package my.games.geometry.game;
 
 import java.awt.event.KeyEvent;
-import java.io.IOException;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
@@ -11,77 +9,48 @@ import my.games.geometry.events.MoveEvent;
 import my.games.geometry.events.ShootEvent;
 import my.games.geometry.events.TurnEventCCW;
 import my.games.geometry.events.TurnEventCW;
+import my.games.geometry.networking.ConnectionWaiter;
 import my.games.geometry.networking.NetworkMessage;
 import my.games.geometry.networking.PlayerInput;
 
 public class Application {
-	int portNumber = 4444;
-	ServerSocket serverSocket = null;
-	Socket clientSocket = null;
+
 	ArrayList<Socket> socketList = new ArrayList<Socket>();
-	ArrayList<ClientServiceThread> clientList = new ArrayList<ClientServiceThread>();
+	ArrayList<ConnectedClient> clientList = new ArrayList<ConnectedClient>();
 	NetworkMessage serverResponce;
 	boolean hasNewEvents = false;
 
 	public static void main(String[] args) {
 		Application myServer = new Application();
-		try {
-			myServer.serverSocket = new ServerSocket(myServer.portNumber);
-
-			while (true) { // fix this to stop somehow
-				System.out.println("Waiting for new connection...");
-				myServer.clientSocket = myServer.serverSocket.accept();
-				myServer.socketList.add(myServer.clientSocket);
-				System.out.println("New connection accepted from " + myServer.clientSocket.getInetAddress());
-				ClientServiceThread st = new ClientServiceThread(myServer.clientSocket, myServer);
-				new Thread(st).start();
-				myServer.clientList.add(st);
-				// System.out.println("New thread for connection was started");
+		Socket newConnect;
+		ConnectionWaiter waiter = new ConnectionWaiter();
+		while (true) { // fix this to stop somehow
+			if ((newConnect = waiter.acceptConnection()) != null) {
+				myServer.socketList.add(newConnect);
+				ConnectedClient client = new ConnectedClient(newConnect, myServer);
+				myServer.clientList.add(client);
 			}
-		} catch (IOException e) {
-			System.out.println("Exception caught when trying to listen on port " + myServer.portNumber
-					+ " or listening for a connection");
-			System.out.println(e.getMessage());
-		} finally {
-			try {
-				for (int i = 0; i < myServer.socketList.size(); i++)
-					myServer.socketList.get(i).close();
-				myServer.serverSocket.close();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			myServer.pollAndNotifyClients();
 		}
 	}
 
-	public synchronized void setMessage(PlayerInput inputFromPlayer) {
-		serverResponce = responceFromInput(inputFromPlayer);
-		// hasNewEvents=true;
-		notifyAllClients();
-	}
-
-	public synchronized NetworkMessage getMessage() {
-		hasNewEvents = false;
-		return serverResponce;
-	}
-
-	public synchronized boolean hasNewEvents() {
-		return hasNewEvents;
-	}
-
-	private void notifyAllClients() {
-		for (int i = 0; i < clientList.size(); i++)
-			try {
-				clientList.get(i).getOutputStream().writeObject(serverResponce);
-				// System.out.println("Event sent to client:
-				// "+clientList.get(i).getClientID());
-			} catch (IOException e) {
-				e.printStackTrace();
+	private void pollAndNotifyClients() {
+		PlayerInput input;
+		closeObsoleteClients();
+		for (int i = 0; i < clientList.size(); i++) {
+			input = clientList.get(i).getInput();
+			if (input != null) {
+				for (int j = 0; j < clientList.size(); j++) {
+					clientList.get(j).sendMessage(responceFromInput(input));
+				}
 			}
+		}
+
 	}
 
 	public void closeObsoleteClients() {
 		for (int i = 0; i < clientList.size(); i++) {
-			if (!clientList.get(i).isRunning()) {
+			if (!clientList.get(i).isConnected()) {
 				System.out.println("The following client disconnected from server: " + clientList.get(i).getClientID());
 				clientList.remove(i);
 			}
