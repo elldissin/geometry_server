@@ -24,13 +24,18 @@ public class Application {
 		Application myServer = new Application();
 		Socket newConnect;
 		ConnectionWaiter waiter = new ConnectionWaiter();
-		while (true) { // fix this to stop somehow
+		while (true) {
 			if ((newConnect = waiter.acceptConnection()) != null) {
 				myServer.socketList.add(newConnect);
 				ConnectedClient client = new ConnectedClient(newConnect, myServer);
 				myServer.clientList.add(client);
 			}
 			myServer.pollAndNotifyClients();
+			try {
+				Thread.sleep(5); // To reduce CPU load
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
