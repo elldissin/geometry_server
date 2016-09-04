@@ -9,6 +9,7 @@ import my.games.geometry.events.MoveEvent;
 import my.games.geometry.events.ShootEvent;
 import my.games.geometry.events.TurnEventCCW;
 import my.games.geometry.events.TurnEventCW;
+import my.games.geometry.networking.ConnectedClient;
 import my.games.geometry.networking.ConnectionWaiter;
 import my.games.geometry.networking.NetworkMessage;
 import my.games.geometry.networking.PlayerInput;
