@@ -13,7 +13,7 @@ public class ConnectedClient {
 	private int clientID;
 	private ClientConnection connection;
 
-	public ConnectedClient(Socket socket, Application server) {
+	public ConnectedClient(Socket socket) {
 		clientID = UniqueIdProvider.getID();
 		try {
 			connection = new ClientConnection(socket);

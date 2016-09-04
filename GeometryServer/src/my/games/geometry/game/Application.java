@@ -14,11 +14,8 @@ import my.games.geometry.networking.NetworkMessage;
 import my.games.geometry.networking.PlayerInput;
 
 public class Application {
-
 	ArrayList<Socket> socketList = new ArrayList<Socket>();
 	ArrayList<ConnectedClient> clientList = new ArrayList<ConnectedClient>();
-	NetworkMessage serverResponce;
-	boolean hasNewEvents = false;
 
 	public static void main(String[] args) {
 		Application myServer = new Application();
@@ -27,7 +24,7 @@ public class Application {
 		while (true) {
 			if ((newConnect = waiter.acceptConnection()) != null) {
 				myServer.socketList.add(newConnect);
-				ConnectedClient client = new ConnectedClient(newConnect, myServer);
+				ConnectedClient client = new ConnectedClient(newConnect);
 				myServer.clientList.add(client);
 			}
 			myServer.pollAndNotifyClients();
