@@ -1,8 +1,6 @@
 package my.games.geometry.game;
 
 import java.awt.event.KeyEvent;
-import java.net.Socket;
-import java.util.ArrayList;
 
 import my.games.geometry.events.GameEvent;
 import my.games.geometry.events.MoveEvent;
@@ -10,13 +8,10 @@ import my.games.geometry.events.ShootEvent;
 import my.games.geometry.events.TurnEventCCW;
 import my.games.geometry.events.TurnEventCW;
 import my.games.geometry.networking.ClientService;
-import my.games.geometry.networking.ConnectedClient;
 import my.games.geometry.networking.NetworkMessage;
 import my.games.geometry.networking.PlayerInput;
 
 public class Application {
-	ArrayList<Socket> socketList = new ArrayList<Socket>();
-	ArrayList<ConnectedClient> clientList = new ArrayList<ConnectedClient>();
 	public ClientService clientService;
 
 	public static void main(String[] args) {
@@ -25,6 +20,11 @@ public class Application {
 		myServer.clientService.start();
 		while (true) {
 			myServer.pollAndNotifyClients(myServer.clientService);
+			try {
+				Thread.sleep(5); // To reduce CPU load
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
