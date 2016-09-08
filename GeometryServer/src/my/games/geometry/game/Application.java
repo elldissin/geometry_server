@@ -9,53 +9,44 @@ import my.games.geometry.events.MoveEvent;
 import my.games.geometry.events.ShootEvent;
 import my.games.geometry.events.TurnEventCCW;
 import my.games.geometry.events.TurnEventCW;
+import my.games.geometry.networking.ClientService;
 import my.games.geometry.networking.ConnectedClient;
-import my.games.geometry.networking.ConnectionWaiter;
 import my.games.geometry.networking.NetworkMessage;
 import my.games.geometry.networking.PlayerInput;
 
 public class Application {
 	ArrayList<Socket> socketList = new ArrayList<Socket>();
 	ArrayList<ConnectedClient> clientList = new ArrayList<ConnectedClient>();
+	public ClientService clientService;
 
 	public static void main(String[] args) {
 		Application myServer = new Application();
-		Socket newConnect;
-		ConnectionWaiter waiter = new ConnectionWaiter();
+		myServer.clientService = new ClientService();
+		myServer.clientService.start();
 		while (true) {
-			if ((newConnect = waiter.acceptConnection()) != null) {
-				myServer.socketList.add(newConnect);
-				ConnectedClient client = new ConnectedClient(newConnect);
-				myServer.clientList.add(client);
-			}
-			myServer.pollAndNotifyClients();
-			try {
-				Thread.sleep(5); // To reduce CPU load
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+			myServer.pollAndNotifyClients(myServer.clientService);
 		}
 	}
 
-	private void pollAndNotifyClients() {
+	private void pollAndNotifyClients(ClientService service) {
 		PlayerInput input;
-		closeObsoleteClients();
-		for (int i = 0; i < clientList.size(); i++) {
-			input = clientList.get(i).getInput();
+		closeObsoleteClients(service);
+		for (int i = 0; i < service.getClientList().size(); i++) {
+			input = service.getClientList().get(i).getInput();
 			if (input != null) {
-				for (int j = 0; j < clientList.size(); j++) {
-					clientList.get(j).sendMessage(responceFromInput(input));
+				for (int j = 0; j < service.getClientList().size(); j++) {
+					service.getClientList().get(j).sendMessage(responceFromInput(input));
 				}
 			}
 		}
-
 	}
 
-	public void closeObsoleteClients() {
-		for (int i = 0; i < clientList.size(); i++) {
-			if (!clientList.get(i).isConnected()) {
-				System.out.println("The following client disconnected from server: " + clientList.get(i).getClientID());
-				clientList.remove(i);
+	public void closeObsoleteClients(ClientService service) {
+		for (int i = 0; i < service.getClientList().size(); i++) {
+			if (!service.getClientList().get(i).isConnected()) {
+				System.out.println("The following client disconnected from server: "
+						+ service.getClientList().get(i).getClientID());
+				service.getClientList().remove(i);
 			}
 		}
 	}
