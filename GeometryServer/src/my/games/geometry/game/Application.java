@@ -9,6 +9,7 @@ public class Application {
 		SwingUtilities.invokeLater(logDisplay);
 
 		Server server = new Server();
+		server.setLogDisplay(logDisplay);
 		server.start();
 	}
 }
