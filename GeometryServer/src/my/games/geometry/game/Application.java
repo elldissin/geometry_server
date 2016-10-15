@@ -2,6 +2,7 @@ package my.games.geometry.game;
 
 import javax.swing.SwingUtilities;
 
+import my.games.geometry.game.engine.Server;
 import my.games.geometry.ui.ServerLogDisplay;
 
 public class Application {
